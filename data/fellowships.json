@@ -1,0 +1,170 @@
+[
+  {
+    "name": "Alcoholics Anonymous",
+    "category": "Substance use",
+    "url": "https://www.chicagoaa.org/meetings/",
+    "status": "finder",
+    "note": "Automated access blocked (403); use official finder"
+  },
+  {
+    "name": "Narcotics Anonymous",
+    "category": "Substance use",
+    "url": "https://chicagona.org/meetings/",
+    "status": "integrated",
+    "note": "Daily BMLT import"
+  },
+  {
+    "name": "Recovery Dharma",
+    "category": "Secular and mindfulness",
+    "url": "https://recoverydharmachicago.org/meetings/",
+    "status": "integrated",
+    "note": "Chicago pilot records; not yet auto-refreshed"
+  },
+  {
+    "name": "Cocaine Anonymous",
+    "category": "Substance use",
+    "url": "https://www.illinoisareaca.org/meetings/",
+    "status": "finder",
+    "note": "Public meeting directory; importer under evaluation"
+  },
+  {
+    "name": "Crystal Meth Anonymous",
+    "category": "Substance use",
+    "url": "https://www.cmachicago.org/meetings",
+    "status": "finder",
+    "note": "Local meeting directory"
+  },
+  {
+    "name": "Marijuana Anonymous",
+    "category": "Substance use",
+    "url": "https://marijuana-anonymous.org/meetings/?type=in-person",
+    "status": "finder",
+    "note": "Official in-person finder"
+  },
+  {
+    "name": "Heroin Anonymous",
+    "category": "Substance use",
+    "url": "https://heroinanonymous.org/meetings/",
+    "status": "finder",
+    "note": "Official meeting finder"
+  },
+  {
+    "name": "SMART Recovery",
+    "category": "Secular and mindfulness",
+    "url": "https://smartrecovery.org/meeting",
+    "status": "link-only",
+    "note": "Published restrictions on republication; official finder"
+  },
+  {
+    "name": "LifeRing Secular Recovery",
+    "category": "Secular and mindfulness",
+    "url": "https://meetings.lifering.org/meetings/",
+    "status": "finder",
+    "note": "Official meeting finder"
+  },
+  {
+    "name": "Refuge Recovery",
+    "category": "Secular and mindfulness",
+    "url": "https://refugerecoverymeetings.org/meetings/",
+    "status": "finder",
+    "note": "Official directory; verify in-person locally"
+  },
+  {
+    "name": "Adult Children of Alcoholics & Dysfunctional Families (ACA)",
+    "category": "Family and relationships",
+    "url": "https://adultchildren.org/meeting-person/",
+    "status": "finder",
+    "note": "Official in-person finder"
+  },
+  {
+    "name": "Codependents Anonymous (CoDA)",
+    "category": "Family and relationships",
+    "url": "https://coda.org/find-a-meeting/usa-meetings-list/",
+    "status": "finder",
+    "note": "Official meeting finder"
+  },
+  {
+    "name": "Sex and Love Addicts Anonymous (SLAA)",
+    "category": "Family and relationships",
+    "url": "https://slaachicagomap.org/meetings/",
+    "status": "finder",
+    "note": "Chicago area meeting directory"
+  },
+  {
+    "name": "Sex Addicts Anonymous (SAA)",
+    "category": "Family and relationships",
+    "url": "https://www.chicagolandsaa.com/meetings/",
+    "status": "finder",
+    "note": "Chicagoland meeting directory"
+  },
+  {
+    "name": "Sexaholics Anonymous (SA)",
+    "category": "Family and relationships",
+    "url": "https://chicagosa.org/meetings/",
+    "status": "finder",
+    "note": "Chicago meeting finder"
+  },
+  {
+    "name": "Al-Anon Family Groups",
+    "category": "Family and relationships",
+    "url": "https://niafg.org/meetings/",
+    "status": "finder",
+    "note": "Northern Illinois finder; respect reuse restrictions"
+  },
+  {
+    "name": "Nar-Anon Family Groups",
+    "category": "Family and relationships",
+    "url": "https://nar-anon.org/meetings-page/",
+    "status": "finder",
+    "note": "Official in-person meeting resources"
+  },
+  {
+    "name": "Families Anonymous",
+    "category": "Family and relationships",
+    "url": "https://familiesanonymous.org/meetings/",
+    "status": "finder",
+    "note": "Official meeting directory"
+  },
+  {
+    "name": "Gamblers Anonymous",
+    "category": "Behavioral and financial",
+    "url": "https://www.gachicago.org/find-a-meeting",
+    "status": "finder",
+    "note": "Chicago area finder"
+  },
+  {
+    "name": "Gam-Anon",
+    "category": "Behavioral and financial",
+    "url": "https://www.gamanonchicago.org/",
+    "status": "finder",
+    "note": "Chicago support group information"
+  },
+  {
+    "name": "Debtors Anonymous",
+    "category": "Behavioral and financial",
+    "url": "https://www.debtorsanonymous.org/meeting-search-f2f/",
+    "status": "finder",
+    "note": "Face-to-face search"
+  },
+  {
+    "name": "Overeaters Anonymous",
+    "category": "Eating and body image",
+    "url": "https://oa.org/find-a-meeting/",
+    "status": "finder",
+    "note": "Official global meeting finder"
+  },
+  {
+    "name": "Eating Disorders Anonymous",
+    "category": "Eating and body image",
+    "url": "https://eatingdisordersanonymous.org/meetings/",
+    "status": "finder",
+    "note": "Official meeting directory"
+  },
+  {
+    "name": "Celebrate Recovery",
+    "category": "Faith-based",
+    "url": "https://locator.crgroups.info/",
+    "status": "finder",
+    "note": "Official location finder; independent faith-based program"
+  }
+]
