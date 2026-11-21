@@ -55,7 +55,7 @@ function normalize(m){if(!m||typeof m!=='object')return null;if(!m.id||!m.title|
 function render(){if(!loaded)return;const term=q.value.trim().toLowerCase(),d=day.value,slot=time.value,p=program.value,ap=approach.value;let arr=meetings.filter(m=>{if(p!=='all'&&m.program!==p)return false;if(ap!=='all'&&meetingApproach(m.program)!==ap)return false;if(savedOnly.checked&&!favorites.has(m.id))return false;if(d==='today'&&m.day!==todayChicago())return false;if(d==='tomorrow'&&m.day!==(todayChicago()+1)%7)return false;if(d!=='today'&&d!=='tomorrow'&&d!=='all'&&m.day!==Number(d))return false;const n=hm(m.start);if(slot==='morning'&&n>=720)return false;if(slot==='afternoon'&&(n<720||n>=1020))return false;if(slot==='evening'&&n<1020)return false;if(openOnly.checked&&m.is_open!==true)return false;if(access.checked&&m.wheelchair_access!==true)return false;return [m.title,m.venue,m.address,m.program,m.postal_code].join(' ').toLowerCase().includes(term)});arr.sort((a,b)=>a.day-b.day||hm(a.start)-hm(b.start||'00:00')||a.title.localeCompare(b.title));savedCount.textContent=`${favorites.size} saved`;count.textContent=`${arr.length} ${arr.length===1?'meeting':'meetings'} listed`;results.innerHTML=arr.length?arr.map(m=>{const addr=[m.address,m.city,m.state,m.postal_code].filter(Boolean).join(', '),maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(addr);const isFavorite=favorites.has(m.id);const tags=[m.mode==='hybrid'?'In person + online':'In person',m.program,approachNames[meetingApproach(m.program)]];if(m.is_open===true)tags.push('Open');if(m.is_open===false)tags.push('Closed');if(m.wheelchair_access===true)tags.push('Wheelchair access listed');const since=daysSince(m.last_checked);const stale=since===null||since>45;return `<article class="meeting"><div class="meeting-top"><div><div class="when">${dayNames[m.day]} · ${pretty(m.start)}${m.end?'–'+pretty(m.end):''}</div><h3>${esc(m.title)}</h3><div class="where"><strong>${esc(m.venue||'Meeting location')}</strong><div>${esc(addr)}</div></div></div><div class="meeting-header-actions"><span class="pill">${esc(m.mode)}</span><button class="favorite-btn" type="button" data-favorite="${esc(m.id)}" aria-pressed="${isFavorite}" aria-label="${isFavorite?'Remove saved meeting':'Save meeting'}: ${esc(m.title)}">${isFavorite?'★ Saved':'☆ Save'}</button></div></div><div class="tags">${tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>${m.notes?`<p class="note">${esc(m.notes)}</p>`:''}${stale?'<p class="notice-stale">This listing has not been rechecked recently. Confirm the official source before traveling.</p>':''}<div class="actions"><a href="${esc(safeUrl(m.source_url))}" target="_blank" rel="noopener noreferrer">Check official listing ↗</a><a href="${maps}" target="_blank" rel="noopener noreferrer">Directions ↗</a>${reportLink(m)?`<a class="report" href="${esc(reportLink(m))}" target="_blank" rel="noopener noreferrer">Report a problem ↗</a>`:''}</div><div class="sourcefoot">Source: ${esc(m.source_name)} · Checked ${esc(m.last_checked||'date unknown')} · Not independently confirmed</div></article>`}).join(''):`<div class="empty"><strong>No matches in our published data.</strong><p>This doesn't mean no meetings exist. Try clearing filters or use the official directories below.</p></div>`}
 async function fetchMeetings(path){const response=await fetch(path,{cache:'no-store'});if(!response.ok)throw new Error(path+' HTTP '+response.status);const data=await response.json();if(!Array.isArray(data))throw new Error(path+' is not an array');return data.map(normalize).filter(Boolean)}
 async function init(){const paths=['data/meetings.json','data/na.json','data/ca.json','data/rd_live.json','data/s_fellowships.json','data/aa.json','data/smart.json'];const responses=await Promise.allSettled(paths.map(fetchMeetings));loadFailures=responses.flatMap((r,i)=>r.status==='rejected'?[paths[i]]:[]);const records=responses.flatMap(r=>r.status==='fulfilled'?r.value:[]);const liveRD=responses[3].status==='fulfilled' && responses[3].value.length>0;const pilotCount=responses[0].status==='fulfilled'?responses[0].value.length:0;const preferred=liveRD?records.filter((m,i)=>!(i<pilotCount&&m.program==='Recovery Dharma')):records;const seen=new Set();meetings=preferred.filter(m=>{if(seen.has(m.id))return false;seen.add(m.id);return true});const programs=[...new Set(meetings.map(m=>m.program))].sort();programs.forEach(p=>program.add(new Option(p,p)));loaded=true;const issues=[];if(!meetings.some(m=>m.program==='Narcotics Anonymous'))issues.push('NA records are not loaded yet');if(loadFailures.length)issues.push('Some sources could not be loaded: '+loadFailures.join(', '));coverage.innerHTML='<strong>Early directory — incomplete coverage.</strong> '+meetings.length+' source-listed weekly meeting sessions from '+programs.length+' recovery '+(programs.length===1?'program':'programs')+'. '+(issues.length?esc(issues.join('. '))+'. ':'')+'Listings are not independently verified. Check the official source before traveling.';render()}
-for(const x of [q,day,time,program,approach,openOnly,access,savedOnly])x.addEventListener('input',render);document.querySelector('#clear').addEventListener('click',()=>{q.value='';day.value='all';time.value='all';program.value='all';approach.value='all';openOnly.checked=false;access.checked=false;savedOnly.checked=false;render()});results.addEventListener('click',e=>{
+for(const x of [q,day,time,program,approach,openOnly,access,savedOnly])x.addEventListener('input',render);approach.addEventListener('input',renderFellowships);document.querySelector('#clear').addEventListener('click',()=>{q.value='';day.value='all';time.value='all';program.value='all';approach.value='all';openOnly.checked=false;access.checked=false;savedOnly.checked=false;renderFellowships();render()});results.addEventListener('click',e=>{
  const b=e.target.closest('.favorite-btn');if(!b)return;
  const id=b.dataset.favorite;if(!id)return;
  if(favorites.has(id))favorites.delete(id);else favorites.add(id);
@@ -64,24 +64,32 @@ for(const x of [q,day,time,program,approach,openOnly,access,savedOnly])x.addEven
 window.addEventListener('storage',e=>{if(e.key===FAVORITES_KEY){favorites=loadFavorites();render()}});
 init();if(githubRepo()){const p=document.querySelector('#reportstatus');p.textContent='';const a=document.createElement('a');a.href=githubRepo()+'/issues/new';a.target='_blank';a.rel='noopener noreferrer';a.textContent='Submit a public correction report';p.append(a,document.createTextNode(' (requires a free GitHub account). Looking up meetings requires no account.'))}
 
+let fellowshipItems=[];
+function renderFellowships(){
+ const grid=document.querySelector('#fellowship-grid'),meta=document.querySelector('#fellowship-meta');
+ if(!fellowshipItems.length)return;
+ const match=approach.value;
+ const items=fellowshipItems.filter(f=>match==='all'||f.approach===match);
+ let last='';
+ grid.innerHTML=items.map(f=>{
+  const header=f.category!==last?'<h3 class="fellowship-category">'+esc(f.category)+'</h3>':'';
+  last=f.category;
+  const sub=f.status==='integrated'?'Meetings included in search':'Official finder · not yet indexed';
+  return header+'<a class="sourcecard fellowship-entry" target="_blank" rel="noopener noreferrer" href="'+esc(safeUrl(f.url))+'">'+esc(f.name)+'<small>'+esc(sub)+'</small></a>';
+ }).join('')||'<p>No fellowship finders match this approach.</p>';
+ meta.textContent=items.length+' of '+fellowshipItems.length+' fellowship resources shown · '+items.filter(f=>f.status==='integrated').length+' indexed';
+}
 async function loadFellowshipCatalog(){
- const grid=document.querySelector('#fellowship-grid'), meta=document.querySelector('#fellowship-meta');
+ const meta=document.querySelector('#fellowship-meta');
  try{
   const res=await fetch('data/fellowships.json',{cache:'no-store'});
-  if(!res.ok)throw new Error('HTTP '+res.status);
+  if(!res.ok)throw Error('HTTP '+res.status);
   const data=await res.json();
-  if(!Array.isArray(data))throw new Error('Invalid source catalog');
-  const items=data.filter(f=>f&&typeof f.name==='string'&&typeof f.category==='string'&&safeUrl(f.url)!=='#');
-  items.sort((a,b)=>a.category.localeCompare(b.category)||a.name.localeCompare(b.name));
-  let last='';
-  grid.innerHTML=items.map(f=>{
-   const header=f.category!==last?'<h3 class="fellowship-category">'+esc(f.category)+'</h3>':'';
-   last=f.category;
-   const sub=f.status==='integrated'?'Meetings included above':'Official finder · not yet indexed';
-   return header+'<a class="sourcecard fellowship-entry" target="_blank" rel="noopener noreferrer" href="'+esc(safeUrl(f.url))+'">'+esc(f.name)+'<small>'+esc(sub)+'</small></a>';
-  }).join('');
-  meta.textContent=items.length+' fellowship resources · '+items.filter(f=>f.status==='integrated').length+' currently indexed';
- }catch(e){meta.textContent='Extended fellowship catalog could not load; original finder links below remain available.';}
+  if(!Array.isArray(data))throw Error('Invalid catalog');
+  fellowshipItems=data.filter(f=>f&&typeof f.name==='string'&&typeof f.category==='string'&&safeUrl(f.url)!=='#');
+  fellowshipItems.sort((a,b)=>a.category.localeCompare(b.category)||a.name.localeCompare(b.name));
+  renderFellowships();
+ }catch(e){meta.textContent='Extended fellowship catalog unavailable; original finder links remain visible.'}
 }
 loadFellowshipCatalog();
 </script></body></html>
