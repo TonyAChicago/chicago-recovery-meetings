@@ -39,11 +39,25 @@
  .layout{display:block}.meeting{scroll-margin-top:16px}
 }
 @media(prefers-reduced-motion:reduce){.filters{transition:none}}
+.facet-details{border:1px solid #d8e6e0;border-radius:11px;background:#fff;margin:0 0 12px;overflow:hidden}
+.facet-details summary{display:flex;align-items:center;gap:9px;cursor:pointer;padding:11px 10px;font-size:13px;font-weight:750;color:#24464d;list-style:none;outline-offset:-2px}
+.facet-details summary::-webkit-details-marker{display:none}
+.facet-details summary::before{content:"▸";font-size:15px;color:#176a68}
+.facet-details[open] summary::before{content:"▾"}
+.facet-details summary span:first-child{flex:1;min-width:0}
+.facet-details summary:focus-visible{outline:3px solid #176a68}
+.facet-summary-status{font-size:11px;color:#536673;font-weight:550;text-align:right}
+.facet-details-content{padding:0 11px 13px;border-top:1px solid #e9efec}
+.facet-bulk{display:flex;gap:7px;padding:11px 0}
+.facet-bulk button{flex:1;padding:8px 10px;border:1px solid #b4cfc7;border-radius:8px;background:#f1f8f5;color:#155653;font-size:12px;font-weight:750}
+.facet-bulk button[data-bulk-mode="exclude"]{background:#fcf1ee;border-color:#e4bdb6;color:#8c3428}
+.facet-bulk button:focus-visible{outline:3px solid #176a68;outline-offset:2px}
+.facet-legend{margin-top:1px}
 </style></head><body><a class="skip" href="#results">Skip to meeting results</a>
 <header class="top"><div class="wrap"><div class="head"><div class="logo"><span class="mark" aria-hidden="true">✦</span> Chicago Recovery Meetings</div><nav class="links" aria-label="Quick links"><a href="#sources">Official directories ↗</a><a href="#corrections">Corrections</a></nav></div><div class="hero"><div class="eyebrow">Find your people. Find a room.</div><h1>A meeting is closer than you think.</h1><p>One place to find in-person recovery meetings around Chicago—across programs and philosophies, without signing up or signing in.</p></div></div></header>
 <div class="pilotnote"><div class="wrap" id="coverage"><strong>Loading meeting listings…</strong> The Chicago directory is incomplete. Always confirm with the original source before traveling.</div></div>
 <main class="wrap"><div class="sectionhead"><div><h2>Find a meeting</h2><p>Chicago city limits · Times shown in Central Time</p></div><span class="pill">Free · No account</span></div>
-<div class="layout"><aside class="filters" id="filter-pane" aria-label="Meeting filters"><div class="filter-heading"><h3>Filter meetings</h3><button type="button" class="filters-close" id="filters-close" aria-label="Close filters">✕</button></div><p class="small facet-help">For each program or approach, choose <strong>Include</strong> or <strong>Exclude</strong>. Tap the same choice again to clear it.</p><div class="field"><label for="q">Search by meeting or neighborhood</label><input id="q" type="search" autocomplete="off" placeholder="e.g. Andersonville"></div><fieldset class="facet-fieldset"><legend>Recovery program</legend><div class="facet-list" id="program-facets" aria-label="Include or exclude recovery programs"></div></fieldset><fieldset class="facet-fieldset"><legend>Recovery approach</legend><div class="facet-list" id="approach-facets" aria-label="Include or exclude recovery approaches"></div></fieldset><div class="field"><label for="day">Day of the week</label><select id="day"><option value="all">Any day</option><option value="today" selected>Today</option><option value="tomorrow">Tomorrow</option><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></div><div class="field"><label for="time">Time of day</label><select id="time"><option value="all">Any time</option><option value="morning">Morning (before noon)</option><option value="afternoon">Afternoon (noon–5pm)</option><option value="evening">Evening (after 5pm)</option></select></div><label class="check"><input type="checkbox" id="open"> Only listed as open to all</label><label class="check"><input type="checkbox" id="accessible"> Wheelchair access listed</label><label class="check"><input type="checkbox" id="saved-only"> Saved meetings only</label><p class="small" id="favorites-note"><span id="favorites-count">0 saved</span> · Saved on this device only, not on our server. Anyone using this browser can see them; clearing site data removes them.</p><button type="button" class="clear" id="clear">Clear filters</button><p class="small">Unknown accessibility or open/closed status is not treated as "no".</p></aside>
+<div class="layout"><aside class="filters" id="filter-pane" aria-label="Meeting filters"><div class="filter-heading"><h3>Filter meetings</h3><button type="button" class="filters-close" id="filters-close" aria-label="Close filters">✕</button></div><p class="small facet-help">All programs and ideologies are included by default. Expand a section to change your selections.</p><div class="field"><label for="q">Search by meeting or neighborhood</label><input id="q" type="search" autocomplete="off" placeholder="e.g. Andersonville"></div><details class="facet-details" id="program-details"><summary><span>Recovery program</span><span class="facet-summary-status" id="program-summary-status">All included</span></summary><div class="facet-details-content"><div class="facet-bulk"><button type="button" data-bulk-kind="program" data-bulk-mode="include" aria-label="Include all recovery programs">All</button><button type="button" data-bulk-kind="program" data-bulk-mode="exclude" aria-label="Exclude all recovery programs">None</button></div><div class="facet-list" id="program-facets" aria-label="Include or exclude recovery programs"></div></div></details><details class="facet-details" id="approach-details"><summary><span>Recovery ideology</span><span class="facet-summary-status" id="approach-summary-status">All included</span></summary><div class="facet-details-content"><div class="facet-bulk"><button type="button" data-bulk-kind="approach" data-bulk-mode="include" aria-label="Include all recovery ideologies">All</button><button type="button" data-bulk-kind="approach" data-bulk-mode="exclude" aria-label="Exclude all recovery ideologies">None</button></div><div class="facet-list" id="approach-facets" aria-label="Include or exclude recovery ideologies"></div></div></details><div class="field"><label for="day">Day of the week</label><select id="day"><option value="all">Any day</option><option value="today" selected>Today</option><option value="tomorrow">Tomorrow</option><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></div><div class="field"><label for="time">Time of day</label><select id="time"><option value="all">Any time</option><option value="morning">Morning (before noon)</option><option value="afternoon">Afternoon (noon–5pm)</option><option value="evening">Evening (after 5pm)</option></select></div><label class="check"><input type="checkbox" id="open"> Only listed as open to all</label><label class="check"><input type="checkbox" id="accessible"> Wheelchair access listed</label><label class="check"><input type="checkbox" id="saved-only"> Saved meetings only</label><p class="small" id="favorites-note"><span id="favorites-count">0 saved</span> · Saved on this device only, not on our server. Anyone using this browser can see them; clearing site data removes them.</p><button type="button" class="clear" id="clear">Clear filters</button><p class="small">Unknown accessibility or open/closed status is not treated as "no".</p></aside>
 <section aria-live="polite" aria-label="Meeting results"><div class="resultmeta"><h3 id="count">Loading meetings…</h3><p>Source-listed, not independently verified</p></div><div id="results" class="results"></div></section></div></main>
 <div class="filters-backdrop" id="filters-backdrop" hidden></div><button type="button" class="filters-fab" id="filters-fab" aria-controls="filter-pane" aria-expanded="false">⚙ Filters <span class="filters-active-count" id="filters-active-count" hidden>0</span></button>
 <section class="directories" id="sources"><div class="wrap"><h2>Explore recovery fellowships</h2><p>The searchable meetings above are imported records. The resources below link to official meeting finders, including fellowships not yet indexed. A directory link does not confirm a Chicago in-person meeting.</p><p class="small" id="fellowship-meta">Loading fellowship catalog…</p><div class="sourcegrid" id="fellowship-grid">
@@ -65,7 +79,7 @@
 const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const q=document.querySelector('#q'),day=document.querySelector('#day'),time=document.querySelector('#time'),programFacets=document.querySelector('#program-facets'),approachFacets=document.querySelector('#approach-facets'),savedOnly=document.querySelector('#saved-only'),savedCount=document.querySelector('#favorites-count'),openOnly=document.querySelector('#open'),access=document.querySelector('#accessible'),count=document.querySelector('#count'),results=document.querySelector('#results'),coverage=document.querySelector('#coverage');
 let meetings=[],loaded=false,loadFailures=[],visibleLimit=100;
-const filters={program:{include:new Set(),exclude:new Set()},approach:{include:new Set(),exclude:new Set()}};
+const filters={program:{exclude:new Set()},approach:{exclude:new Set()}};
 const filterPane=document.querySelector('#filter-pane'),filterFab=document.querySelector('#filters-fab'),filterClose=document.querySelector('#filters-close'),filterBackdrop=document.querySelector('#filters-backdrop'),filterActiveCount=document.querySelector('#filters-active-count');
 let previousFocus=null;
 function meetingApproach(name){const n=String(name||'').toLowerCase();if(n.includes('dharma')||n.includes('refuge recovery'))return 'mindfulness';if(n.includes('smart recovery')||n.includes('lifering')||n.includes('recovery international'))return 'secular';if(n.includes('celebrate recovery'))return 'faith';return '12step'}
@@ -76,13 +90,13 @@ let favorites=loadFavorites();
 function persistFavorites(){try{localStorage.setItem(FAVORITES_KEY,JSON.stringify([...favorites]));return true}catch(e){document.querySelector('#favorites-note').textContent='This browser cannot save favorites. Try leaving private browsing mode or enabling site storage.';return false}}
 
 
-function facetState(kind,value){const f=filters[kind];return f.include.has(value)?'include':f.exclude.has(value)?'exclude':'any'}
+function facetState(kind,value){return filters[kind].exclude.has(value)?'exclude':'include'}
 function passesFacet(kind,value){
  const f=filters[kind];
- return !f.exclude.has(value)&&(!f.include.size||f.include.has(value));
+ return !f.exclude.has(value);
 }
 function activeFiltersCount(){
- return Object.values(filters).reduce((n,f)=>n+f.include.size+f.exclude.size,0)
+ return Object.values(filters).reduce((n,f)=>n+f.exclude.size,0)
  + (q.value.trim()?1:0)+(day.value!=='all'&&day.value!=='today'?1:0)
  + (time.value!=='all'?1:0)+(openOnly.checked?1:0)
  + (access.checked?1:0)+(savedOnly.checked?1:0);
@@ -92,19 +106,22 @@ function updateFilterBadge(){
  filterActiveCount.hidden=n===0;
  filterFab.setAttribute('aria-label','Filters'+(n?' ('+n+' active)':''));
 }
+function facetValues(kind){return kind==='program'?[...new Set(meetings.map(m=>m.program))].sort((a,b)=>a.localeCompare(b)).map(p=>[p,p]):Object.entries(approachNames)}
 function renderFacetList(kind,values){
  const target=kind==='program'?programFacets:approachFacets;
- target.innerHTML='<div class="facet-legend"><span><strong>+</strong> Include</span><span class="minus">− Exclude</span><span>Tap again to clear</span></div>'+values.map(([value,label])=>{
+ target.innerHTML='<div class="facet-legend"><span><strong>+</strong> Include</span><span class="minus">− Exclude</span></div>'+values.map(([value,label])=>{
   const state=facetState(kind,value);
   const isIn=state==='include',isOut=state==='exclude';
   return '<div class="facet-row"><span class="facet-name">'+esc(label)+'</span>'+
    '<button class="facet-choice" type="button" data-filter-kind="'+kind+'" data-filter-value="'+esc(value)+'" data-mode="include" aria-pressed="'+isIn+'" aria-label="Include '+esc(label)+'" title="Include '+esc(label)+'">+</button>'+
    '<button class="facet-choice" type="button" data-filter-kind="'+kind+'" data-filter-value="'+esc(value)+'" data-mode="exclude" aria-pressed="'+isOut+'" aria-label="Exclude '+esc(label)+'" title="Exclude '+esc(label)+'">−</button></div>';
  }).join('');
+ const excluded=values.filter(([value])=>filters[kind].exclude.has(value)).length;
+ document.querySelector('#'+kind+'-summary-status').textContent=excluded===0?'All included':excluded===values.length?'None included':excluded+' excluded';
 }
 function renderFacets(){
- renderFacetList('program',[...new Set(meetings.map(m=>m.program))].sort((a,b)=>a.localeCompare(b)).map(p=>[p,p]));
- renderFacetList('approach',Object.entries(approachNames));
+ renderFacetList('program',facetValues('program'));
+ renderFacetList('approach',facetValues('approach'));
  updateFilterBadge();
 }
 function selectFacet(e){
@@ -112,9 +129,17 @@ function selectFacet(e){
  if(!b)return;
  const kind=b.dataset.filterKind,value=b.dataset.filterValue,mode=b.dataset.mode;
  if(!(kind in filters)||!['include','exclude'].includes(mode))return;
- const f=filters[kind],was=f[mode].has(value);
- f.include.delete(value);f.exclude.delete(value);
- if(!was)f[mode].add(value);
+ const f=filters[kind];
+ if(mode==='exclude'){if(f.exclude.has(value))f.exclude.delete(value);else f.exclude.add(value)}
+ else f.exclude.delete(value);
+ visibleLimit=100;renderFacets();render();renderFellowships();
+}
+function selectBulkFacet(e){
+ const b=e.target.closest('button[data-bulk-kind][data-bulk-mode]');if(!b)return;
+ const kind=b.dataset.bulkKind,mode=b.dataset.bulkMode;
+ if(!(kind in filters)||!['include','exclude'].includes(mode))return;
+ filters[kind].exclude.clear();
+ if(mode==='exclude')for(const [value] of facetValues(kind))filters[kind].exclude.add(value);
  visibleLimit=100;renderFacets();render();renderFellowships();
 }
 function setFilterOpen(open){
@@ -132,7 +157,7 @@ filterBackdrop.addEventListener('click',()=>setFilterOpen(false));
 document.addEventListener('keydown',e=>{
  if(e.key==='Escape'&&document.body.classList.contains('filters-open'))setFilterOpen(false);
  if(e.key==='Tab'&&document.body.classList.contains('filters-open')){
-  const buttons=[...filterPane.querySelectorAll('button:not([disabled]),input:not([disabled]),select:not([disabled])')];
+  const buttons=[...filterPane.querySelectorAll('button:not([disabled]),input:not([disabled]),select:not([disabled]),summary')].filter(el=>el.getClientRects().length);
   if(!buttons.length)return;
   const first=buttons[0],last=buttons[buttons.length-1];
   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
@@ -142,6 +167,7 @@ document.addEventListener('keydown',e=>{
 window.matchMedia('(min-width:721px)').addEventListener('change',e=>{if(e.matches&&document.body.classList.contains('filters-open'))setFilterOpen(false)});
 programFacets.addEventListener('click',selectFacet);
 approachFacets.addEventListener('click',selectFacet);
+filterPane.addEventListener('click',selectBulkFacet);
 
 function todayChicago(){return dayNames.indexOf(new Intl.DateTimeFormat('en-US',{weekday:'long',timeZone:'America/Chicago'}).format(new Date()))}
 function hm(s){const [h,m]=String(s).split(':').map(Number);return h*60+m}
@@ -155,7 +181,7 @@ function normalize(m){if(!m||typeof m!=='object')return null;if(!m.id||!m.title|
 function render(){if(!loaded)return;const term=q.value.trim().toLowerCase(),d=day.value,slot=time.value;let arr=meetings.filter(m=>{if(!passesFacet('program',m.program))return false;if(!passesFacet('approach',meetingApproach(m.program)))return false;if(savedOnly.checked&&!favorites.has(m.id))return false;if(d==='today'&&m.day!==todayChicago())return false;if(d==='tomorrow'&&m.day!==(todayChicago()+1)%7)return false;if(d!=='today'&&d!=='tomorrow'&&d!=='all'&&m.day!==Number(d))return false;const n=hm(m.start);if(slot==='morning'&&n>=720)return false;if(slot==='afternoon'&&(n<720||n>=1020))return false;if(slot==='evening'&&n<1020)return false;if(openOnly.checked&&m.is_open!==true)return false;if(access.checked&&m.wheelchair_access!==true)return false;return [m.title,m.venue,m.address,m.program,m.postal_code].join(' ').toLowerCase().includes(term)});arr.sort((a,b)=>a.day-b.day||hm(a.start)-hm(b.start||'00:00')||a.title.localeCompare(b.title));savedCount.textContent=`${favorites.size} saved`;updateFilterBadge();count.textContent=`${arr.length} ${arr.length===1?'meeting':'meetings'} listed`;results.innerHTML=arr.length?arr.slice(0,visibleLimit).map(m=>{const addr=[m.address,m.city,m.state,m.postal_code].filter(Boolean).join(', '),maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(addr);const isFavorite=favorites.has(m.id);const tags=[m.mode==='hybrid'?'In person + online':'In person',m.program,approachNames[meetingApproach(m.program)]];if(m.is_open===true)tags.push('Open');if(m.is_open===false)tags.push('Closed');if(m.wheelchair_access===true)tags.push('Wheelchair access listed');const since=daysSince(m.last_checked);const stale=since===null||since>45;return `<article class="meeting"><div class="meeting-top"><div><div class="when">${dayNames[m.day]} · ${pretty(m.start)}${m.end?'–'+pretty(m.end):''}</div><h3>${esc(m.title)}</h3><div class="where"><strong>${esc(m.venue||'Meeting location')}</strong><div>${esc(addr)}</div></div></div><div class="meeting-header-actions"><span class="pill">${esc(m.mode)}</span><button class="favorite-btn" type="button" data-favorite="${esc(m.id)}" aria-pressed="${isFavorite}" aria-label="${isFavorite?'Remove saved meeting':'Save meeting'}: ${esc(m.title)}">${isFavorite?'★ Saved':'☆ Save'}</button></div></div><div class="tags">${tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>${m.notes?`<p class="note">${esc(m.notes)}</p>`:''}${stale?'<p class="notice-stale">This listing has not been rechecked recently. Confirm the official source before traveling.</p>':''}<div class="actions"><a href="${esc(safeUrl(m.source_url))}" target="_blank" rel="noopener noreferrer">Check official listing ↗</a><a href="${maps}" target="_blank" rel="noopener noreferrer">Directions ↗</a>${reportLink(m)?`<a class="report" href="${esc(reportLink(m))}" target="_blank" rel="noopener noreferrer">Report a problem ↗</a>`:''}</div><div class="sourcefoot">Source: ${esc(m.source_name)} · Checked ${esc(m.last_checked||'date unknown')} · Not independently confirmed</div></article>`}).join('')+(arr.length>visibleLimit?`<button class="more-btn" type="button" id="show-more">Show ${Math.min(100,arr.length-visibleLimit)} more of ${arr.length} meetings</button>`:''):`<div class="empty"><strong>No matches in our published data.</strong><p>This doesn't mean no meetings exist. Try clearing filters or use the official directories below.</p></div>`}
 async function fetchMeetings(path){const response=await fetch(path,{cache:'no-store'});if(!response.ok)throw new Error(path+' HTTP '+response.status);const data=await response.json();if(!Array.isArray(data))throw new Error(path+' is not an array');return data.map(normalize).filter(Boolean)}
 async function init(){const paths=['data/meetings.json','data/na.json','data/ca.json','data/rd_live.json','data/s_fellowships.json','data/aa.json','data/smart.json'];const responses=await Promise.allSettled(paths.map(fetchMeetings));loadFailures=responses.flatMap((r,i)=>r.status==='rejected'?[paths[i]]:[]);const records=responses.flatMap(r=>r.status==='fulfilled'?r.value:[]);const liveRD=responses[3].status==='fulfilled' && responses[3].value.length>0;const pilotCount=responses[0].status==='fulfilled'?responses[0].value.length:0;const preferred=liveRD?records.filter((m,i)=>!(i<pilotCount&&m.program==='Recovery Dharma')):records;const seen=new Set();meetings=preferred.filter(m=>{if(seen.has(m.id))return false;seen.add(m.id);return true});loaded=true;renderFacets();const issues=[];if(!meetings.some(m=>m.program==='Narcotics Anonymous'))issues.push('NA records are not loaded yet');if(loadFailures.length)issues.push('Some sources could not be loaded: '+loadFailures.join(', '));coverage.innerHTML='<strong>Early directory — incomplete coverage.</strong> '+meetings.length+' source-listed weekly meeting sessions from '+programs.length+' recovery '+(programs.length===1?'program':'programs')+'. '+(issues.length?esc(issues.join('. '))+'. ':'')+'Listings are not independently verified. Check the official source before traveling.';render()}
-for(const x of [q,day,time,openOnly,access,savedOnly])x.addEventListener('input',()=>{visibleLimit=100;render()});document.querySelector('#clear').addEventListener('click',()=>{q.value='';day.value='all';time.value='all';openOnly.checked=false;access.checked=false;savedOnly.checked=false;for(const f of Object.values(filters)){f.include.clear();f.exclude.clear()}visibleLimit=100;renderFacets();renderFellowships();render()});results.addEventListener('click',e=>{
+for(const x of [q,day,time,openOnly,access,savedOnly])x.addEventListener('input',()=>{visibleLimit=100;render()});document.querySelector('#clear').addEventListener('click',()=>{q.value='';day.value='all';time.value='all';openOnly.checked=false;access.checked=false;savedOnly.checked=false;for(const f of Object.values(filters))f.exclude.clear();visibleLimit=100;renderFacets();renderFellowships();render()});results.addEventListener('click',e=>{
  if(e.target.closest('#show-more')){visibleLimit+=100;render();return}
  const b=e.target.closest('.favorite-btn');if(!b)return;
  const id=b.dataset.favorite;if(!id)return;
