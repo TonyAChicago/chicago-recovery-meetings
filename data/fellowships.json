@@ -83,8 +83,8 @@
     "name": "Adult Children of Alcoholics & Dysfunctional Families (ACA)",
     "category": "Family and relationships",
     "url": "https://adultchildren.org/meeting-person/",
-    "status": "finder",
-    "note": "Official in-person finder",
+    "status": "integrated",
+    "note": "Nine Chicago in-person meetings imported daily from SobaSearch's public ACA directory; verify with ACA WSO before attending",
     "approach": "12step"
   },
   {
