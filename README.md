@@ -1,40 +1,54 @@
 # Chicago Recovery Meetings
 
-A **free, independent, noncommercial** directory of in-person and hybrid recovery meetings **within Chicago city limits**.
+A free, mobile-friendly, independent directory of **in-person and hybrid recovery meetings within Chicago city limits**.
 
-**Website:** https://tonyachicago.github.io/chicago-recovery-meetings/
+**Live website:** https://tonyachicago.github.io/chicago-recovery-meetings/
 
-## Coverage
+## What's included (November 21, 2026)
 
-The website combines source-listed weekly meeting schedules with a broader fellowship directory:
+Daily source imports, last verified from the public schedules:
 
-- Automated in-person/hybrid meeting records: Narcotics Anonymous (Chicagoland BMLT), Cocaine Anonymous (Illinois Area), Recovery Dharma Chicago, and selected Sex and Love Addicts Anonymous / Sex Addicts Anonymous records from S Meetings Chicago.
-- 31 fellowship links in `data/fellowships.json`, including fellowships without an imported schedule.
-- Alcoholics Anonymous is linked to the official meeting finder. Automated requests to Chicago AA were answered with HTTP 403, so no AA data is copied.
-- SMART Recovery is linked to its official meeting finder rather than republished because of source restrictions.
-- Searchable listings are **not field-verified**. Always check the original fellowship's meeting page before travelling.
+| Program | Source | Weekly physical/hybrid sessions imported |
+|---|---|---:|
+| Alcoholics Anonymous | Recovery Starts public Chicago AA index (independent, attributes Chicago area AA sources) | 878 |
+| Narcotics Anonymous | Chicagoland BMLT | 99 |
+| Recovery Dharma | Recovery Dharma Chicago meeting list | 13 |
+| Sex and Love Addicts Anonymous | S Meetings Chicago | 10 |
+| Cocaine Anonymous | Illinois Area CA directory | 9 |
+| Sex Addicts Anonymous | S Meetings Chicago | 6 |
+| SMART Recovery | SobaSearch's public Illinois SMART listings (independent factual index) | 6 |
+| **Total** | | **1,021** |
 
-## Data update workflow
+These are *weekly session listings*, not distinct meeting groups, and have **not been independently field-verified**. Check the linked source before traveling. A source may list a moved or cancelled meeting. The source count is a snapshot and may change with each refresh.
 
-`.github/workflows/refresh-and-deploy.yml` refreshes the directory daily (GitHub Actions, free public repository).
+The site's fellowship directory separately includes **31 resources**; unindexed programs appear as official finder links.
 
-- `scripts/import_na.py` imports official BMLT data to `data/na.json`.
-- `scripts/import_other.py` parses source directories with Python's standard library, saving `data/ca.json`, `data/rd_live.json` and `data/s_fellowships.json`.
-- `data/meetings.json` holds the original manually curated Recovery Dharma pilot as a fallback if `rd_live.json` becomes unavailable.
-- Each import **preserves the previously published file when a source fails**, checks city and physical attendance, and requires a minimum record count. Import success is **not** independent verification.
-- The scheduled workflow commits changed JSON to `main`. The repository's existing branch-based Pages deployment publishes it.
-- The site is static, requires no accounts and does not use analytics.
+## Features
 
-## Corrections and restrictions
+- Search by day, time, address, meeting name, and program.
+- **Recovery approach filter:** 12-step, secular/science-based, mindfulness/Buddhist-inspired, and faith-based/Christian. The label comes from fellowship philosophy, not the beliefs of individual attendees.
+- **Saved meetings:** Use the ☆ Save / ★ Saved button and *Saved meetings only* filter. Favorites live in the visitor's browser `localStorage`, not in cookies or an account. They persist on the same browser/device unless site data is cleared. Other users of a shared browser may see them.
+- Program-specific public directories and correction links to GitHub Issues.
+- No user accounts, ads, paid services, or site-operated analytics.
 
-Readers can report incorrect meeting information through GitHub Issues. Do not post attendee identities, personal recovery history, or private contact information. Requests to remove disputed listings will be handled promptly.
+## Daily import pipeline
 
-The site isn't affiliated with, sponsored by, or endorsed by any listed fellowship. Published meeting details are source-linked. No blanket permission is asserted for reuse of proprietary schedules.
+`.github/workflows/refresh-and-deploy.yml` runs daily and on importer changes:
 
-## Scope and limitations
+- `scripts/import_aa.py` → `data/aa.json`: *one* public Recovery Starts Chicago directory request; filter physical Chicago addresses; observe robots policy and preserve the last successful file if an import fails or has too few records.
+- `scripts/import_na.py` → `data/na.json`: the official Chicagoland BMLT service.
+- `scripts/import_other.py` → `data/ca.json`, `data/rd_live.json`, `data/s_fellowships.json`: public official fellowship meeting directories.
+- `scripts/import_smart.py` → `data/smart.json`: public factual SMART meeting fields indexed by independent SobaSearch, not an access workaround to SMART's restricted site. Includes only physical attendance modes; all pages must be reachable or the last successful file stays intact.
+- `data/meetings.json` holds the manually sourced original Recovery Dharma fallback data. When `rd_live.json` is populated, the website uses that newer source instead of duplicating the fallback.
 
-- Weekly sessions, not unique groups or individual meeting occurrences.
-- Chicago municipality is required; geometry/address filtering is approximate, and sources may have mistakes.
-- Some directory links may not currently have local in-person meetings.
-- Recurring source imports may temporarily fail or be rate-limited; old records can become stale.
-- The site deliberately remains in pilot mode until coverage is broader and quality checks improve.
+On successful imports, data changes are committed back to `main`. GitHub's existing branch-based Pages workflow deploys that revision. A source failure never replaces a working file with an empty array. There is no external API key, database, domain, or server bill.
+
+## Sources, permissions, and accuracy
+
+This is not an official fellowship service or endorsed by any program. Published times and addresses are attributed to the respective source pages. Some third-party catalogs aggregate meeting facts from official directories; their listing doesn't imply permission from each original publisher. If a source's terms change or a legitimate takedown request is received, pause that import and remove disputed records while reviewing.
+
+Chicago AA's own site returned HTTP 403 to cloud automation, so AA is indexed from an independent public AA directory instead of bypassing its protection. SMART Recovery's site prohibits republication without consent; this project does not download from its site. SobaSearch publishes a public meeting index with crawler guidance for search indexing; this project collects factual metadata with direct attribution only, not full text or descriptions. These conditions should be reviewed periodically.
+
+We do not publish attendees' names, contact details, private meeting notes, or recovery histories. GitHub Issues are public: do not disclose personal details in a correction.
+
+**Early directory:** In-person listings may still include source errors. Verify each meeting with the linked publisher before attending.
