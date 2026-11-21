@@ -87,14 +87,14 @@
     "name": "Sex and Love Addicts Anonymous (SLAA)",
     "category": "Family and relationships",
     "url": "https://slaachicagomap.org/meetings/",
-    "status": "finder",
+    "status": "integrated",
     "note": "Chicago area meeting directory"
   },
   {
     "name": "Sex Addicts Anonymous (SAA)",
     "category": "Family and relationships",
     "url": "https://www.chicagolandsaa.com/meetings/",
-    "status": "finder",
+    "status": "integrated",
     "note": "Chicagoland meeting directory"
   },
   {
