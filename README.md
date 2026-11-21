@@ -17,7 +17,8 @@ Daily source imports, last verified from the public schedules:
 | Cocaine Anonymous | Illinois Area CA directory | 9 |
 | Sex Addicts Anonymous | S Meetings Chicago | 6 |
 | SMART Recovery | SobaSearch's public Illinois SMART listings (independent factual index) | 6 |
-| **Total** | | **1,021** |
+| Adult Children of Alcoholics & Dysfunctional Families (ACA) | SobaSearch Chicago ACA directory, with original ACA WSO finder linked for confirmation | 9 |
+| **Total** | | **1,030** |
 
 These are *weekly session listings*, not distinct meeting groups, and have **not been independently field-verified**. Check the linked source before traveling. A source may list a moved or cancelled meeting. The source count is a snapshot and may change with each refresh.
 
@@ -26,7 +27,7 @@ The site's fellowship directory separately includes **31 resources**; unindexed 
 ## Features
 
 - Search by day, time, address, meeting name, and program.
-- **Recovery approach filter:** 12-step, secular/science-based, mindfulness/Buddhist-inspired, and faith-based/Christian. The label comes from fellowship philosophy, not the beliefs of individual attendees.
+- **Recovery ideology filter:** Collapsed by default, with All/None shortcuts and individual include/exclude controls. Groups are classified as 12-step, secular/science-based, mindfulness/Buddhist-inspired, or faith-based/Christian based on fellowship philosophy, not on individual attendees.
 - **Saved meetings:** Use the ☆ Save / ★ Saved button and *Saved meetings only* filter. Favorites live in the visitor's browser `localStorage`, not in cookies or an account. They persist on the same browser/device unless site data is cleared. Other users of a shared browser may see them.
 - Program-specific public directories and correction links to GitHub Issues.
 - No user accounts, ads, paid services, or site-operated analytics.
@@ -39,6 +40,7 @@ The site's fellowship directory separately includes **31 resources**; unindexed 
 - `scripts/import_na.py` → `data/na.json`: the official Chicagoland BMLT service.
 - `scripts/import_other.py` → `data/ca.json`, `data/rd_live.json`, `data/s_fellowships.json`: public official fellowship meeting directories.
 - `scripts/import_smart.py` → `data/smart.json`: public factual SMART meeting fields indexed by independent SobaSearch, not an access workaround to SMART's restricted site. Includes only physical attendance modes; all pages must be reachable or the last successful file stays intact.
+- `scripts/import_aca.py` → `data/aca.json`: independent SobaSearch Chicago ACA source list. Imports only physical or hybrid records with valid Chicago street addresses, and never copies contact information. If the source fails or becomes too small, the previous file remains.
 - `data/meetings.json` holds the manually sourced original Recovery Dharma fallback data. When `rd_live.json` is populated, the website uses that newer source instead of duplicating the fallback.
 
 On successful imports, data changes are committed back to `main`. GitHub's existing branch-based Pages workflow deploys that revision. A source failure never replaces a working file with an empty array. There is no external API key, database, domain, or server bill.
