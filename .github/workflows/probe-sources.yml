@@ -1,0 +1,46 @@
+name: Probe public meeting data endpoints
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/probe-sources.yml"
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe source endpoints
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError
+          import re,json
+          urls={
+            "chicagoaa-meetings":"https://www.chicagoaa.org/meetings/",
+            "chicagoaa-api":"https://www.chicagoaa.org/wp-json/",
+            "chicagoaa-tsml":"https://www.chicagoaa.org/wp-content/plugins/12-step-meeting-list/meeting-guide.php",
+            "ca-locations":"https://www.illinoisareaca.org/locations",
+            "ca-tsml":"https://www.illinoisareaca.org/wp-content/plugins/12-step-meeting-list/meeting-guide.php",
+            "rd-locations":"https://recoverydharmachicago.org/locations/",
+            "rd-tsml":"https://recoverydharmachicago.org/wp-content/plugins/12-step-meeting-list/meeting-guide.php",
+            "rd-meetings":"https://recoverydharmachicago.org/meetings/?tsml-day=any",
+            "aca":"https://adultchildren.org/meeting-person/",
+            "lifering":"https://meetings.lifering.org/meetings/",
+            "cma":"https://www.cmachicago.org/meetings",
+            "alanon":"https://niafg.org/meetings/",
+          }
+          for key,url in urls.items():
+              try:
+                  req=Request(url,headers={"User-Agent":"ChicagoRecoveryMeetings/0.4 (community recovery directory)", "Accept":"application/json,text/html"})
+                  with urlopen(req,timeout=16) as r:
+                      b=r.read(400000).decode("utf-8","replace")
+                      typ=r.headers.get("Content-Type","")
+                      title=re.search(r"<title[^>]*>(.*?)</title>",b,re.I|re.S)
+                      tr=len(re.findall(r"<tr\b",b,re.I))
+                      print(json.dumps({"source":key,"status":r.status,"type":typ,"bytes_read":len(b),"url":r.url,"title":(title.group(1).strip()[:90] if title else ""),"tr_rows":tr,"json_head":b[:120] if "json" in typ or b.startswith("[") else "","markers":list(set(re.findall(r"tsml-[a-z]+|meeting-guide|wp-block-table",b,re.I)))[:6]},ensure_ascii=False))
+              except Exception as e:
+                  print(json.dumps({"source":key,"error":str(e)[:240]}))
+          PY
