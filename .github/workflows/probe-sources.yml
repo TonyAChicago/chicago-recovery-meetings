@@ -32,15 +32,35 @@ jobs:
             "cma":"https://www.cmachicago.org/meetings",
             "alanon":"https://niafg.org/meetings/",
           }
+          # Preview representative source table markup without exposing private contacts.
+          from html.parser import HTMLParser
+          class Rows(HTMLParser):
+              def __init__(self):
+                  super().__init__();self.depth=0;self.rows=[];self.cur=None;self.cell=None;self.link=None
+              def handle_starttag(self,tag,attrs):
+                  attrs=dict(attrs)
+                  if tag=="tr":
+                      self.cur={"attrs":attrs,"cells":[],"links":[]}
+                  elif self.cur is not None and tag in ("td","th"):
+                      self.cell={"attrs":attrs,"text":""}
+                  elif self.cur is not None and tag=="a":
+                      self.link=attrs.get("href","")
+                      if self.link:self.cur["links"].append(self.link)
+              def handle_data(self,data):
+                  if self.cell is not None:self.cell["text"]+=data
+              def handle_endtag(self,tag):
+                  if tag in ("td","th") and self.cell is not None:
+                      self.cell["text"]=" ".join(self.cell["text"].split())[:160]
+                      self.cur["cells"].append(self.cell);self.cell=None
+                  if tag=="tr" and self.cur is not None:
+                      if self.cur["cells"]:self.rows.append(self.cur)
+                      self.cur=None
           for key,url in urls.items():
               try:
-                  req=Request(url,headers={"User-Agent":"ChicagoRecoveryMeetings/0.4 (community recovery directory)", "Accept":"application/json,text/html"})
+                  req=Request(url,headers={"User-Agent":"ChicagoRecoveryMeetings/0.4 (community recovery directory)", "Accept":"text/html"})
                   with urlopen(req,timeout=16) as r:
                       b=r.read(400000).decode("utf-8","replace")
-                      typ=r.headers.get("Content-Type","")
-                      title=re.search(r"<title[^>]*>(.*?)</title>",b,re.I|re.S)
-                      tr=len(re.findall(r"<tr\b",b,re.I))
-                      print(json.dumps({"source":key,"status":r.status,"type":typ,"bytes_read":len(b),"url":r.url,"title":(title.group(1).strip()[:90] if title else ""),"tr_rows":tr,"json_head":b[:120] if "json" in typ or b.startswith("[") else "","markers":list(set(re.findall(r"tsml-[a-z]+|meeting-guide|wp-block-table",b,re.I)))[:6]},ensure_ascii=False))
-              except Exception as e:
-                  print(json.dumps({"source":key,"error":str(e)[:240]}))
+                      parser=Rows();parser.feed(b)
+                      print(json.dumps({"source":key,"rows":parser.rows[:4]},ensure_ascii=False))
+              except Exception as e:print(json.dumps({"source":key,"error":str(e)[:160]}))
           PY
