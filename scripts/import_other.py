@@ -139,13 +139,13 @@ def convert_s(row, checked):
     if not mode:return None
     c=row["cells"]
     if len(c)<8:return None
-    match=re.match(r"([0-6])-(\\d{2}:\\d{2})-",c[0]["attrs"].get("data-sort",""))
+    match=re.match(r"([0-6])-(\d{2}:\d{2})-",c[0]["attrs"].get("data-sort",""))
     if not match:return None
     day,time=int(match.group(1)),match.group(2)
     name,venue,address,region,types=(c[2]["text"],c[3]["text"],c[4]["text"],c[5]["text"],c[7]["text"])
     if region.strip().lower() not in ("chicago","chicago, il"):return None
-    if not address or re.search(r"\\b(online only|virtual only|zoom only)\\b",venue+" "+address,re.I):return None
-    if re.search(r"\\bintergroup\\b",name,re.I):return None
+    if not address or re.search(r"\b(online only|virtual only|zoom only)\b",venue+" "+address,re.I):return None
+    if re.search(r"\bintergroup\b",name,re.I):return None
     if name.upper().startswith("SLAA"):
         label="Sex and Love Addicts Anonymous"
     elif name.upper().startswith("SAA"):
