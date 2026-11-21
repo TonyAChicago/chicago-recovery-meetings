@@ -14,9 +14,14 @@ jobs:
           python3 - <<'PY'
           from urllib.request import Request,urlopen
           import re
-          urls=["https://sobasearch.com/robots.txt",
-             "https://sobasearch.com/meetings/il/chicago",
-             "https://sobasearch.com/meetings/us/illinois/smart/smart-recovery-usa-meeting-3016-chicago-illinois"]
+          urls=[
+             "https://sobasearch.com/meetings/us/illinois/smart",
+             "https://sobasearch.com/meetings/us/illinois/smart?page=2",
+             "https://sobasearch.com/meetings/il/chicago?program=smart",
+             "https://sobasearch.com/meetings/il/chicago?fellowship=smart",
+             "https://sobasearch.com/meetings/il/chicago?page=2",
+             "https://sobasearch.com/search?program=SMART&location=Chicago"
+          ]
           for u in urls:
             try:
               req=Request(u,headers={"User-Agent":"ChicagoRecoveryMeetings/0.5 (public support directory)","Accept":"text/html,text/plain"})
