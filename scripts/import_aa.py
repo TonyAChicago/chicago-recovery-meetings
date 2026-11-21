@@ -110,8 +110,11 @@ def normalize(card,checked):
 
 def main():
     robot=urllib.robotparser.RobotFileParser()
-    robot.set_url("https://recoverystarts.com/robots.txt")
-    robot.read()
+    policy_req=Request("https://recoverystarts.com/robots.txt",
+                       headers={"User-Agent":UA,"Accept":"text/plain"})
+    with urlopen(policy_req,timeout=15) as policy_response:
+        if policy_response.status!=200:raise RuntimeError("Unable to confirm robots policy")
+        robot.parse(policy_response.read(120000).decode("utf-8","replace").splitlines())
     if not robot.can_fetch(UA,URL):
         raise RuntimeError("AA directory is not allowed by robots policy; preserving existing records")
     req=Request(URL,headers={"User-Agent":UA,"Accept":"text/html"})
