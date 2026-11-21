@@ -31,6 +31,12 @@ jobs:
             "lifering":"https://meetings.lifering.org/meetings/",
             "cma":"https://www.cmachicago.org/meetings",
             "alanon":"https://niafg.org/meetings/",
+            "marijuana":"https://marijuana-anonymous.org/locations/",
+            "eating-disorders":"https://eatingdisordersanonymous.org/locations/",
+            "slaa":"https://slaachicagomap.org/meetings/",
+            "saa":"https://smeetingschicago.com/meetings/?tsml-region=chicago",
+            "buddhist-recovery":"https://buddhistrecovery.org/meetings/?tsml-region=illinois",
+            "refuge":"https://refugerecoverymeetings.org/locations/",
           }
           # Preview representative source table markup without exposing private contacts.
           from html.parser import HTMLParser
