@@ -24,7 +24,7 @@
     "name": "Cocaine Anonymous",
     "category": "Substance use",
     "url": "https://www.illinoisareaca.org/meetings/",
-    "status": "finder",
+    "status": "integrated",
     "note": "Public meeting directory; importer under evaluation"
   },
   {
@@ -156,15 +156,64 @@
   {
     "name": "Eating Disorders Anonymous",
     "category": "Eating and body image",
-    "url": "https://eatingdisordersanonymous.org/meetings/",
+    "url": "https://eatingdisordersanonymous.org/meeting/",
     "status": "finder",
     "note": "Official meeting directory"
   },
   {
     "name": "Celebrate Recovery",
     "category": "Faith-based",
-    "url": "https://locator.crgroups.info/",
+    "url": "https://crlocator.com/",
     "status": "finder",
     "note": "Official location finder; independent faith-based program"
+  },
+  {
+    "name": "S-Anon",
+    "category": "Family and relationships",
+    "url": "https://sanon.org/find-a-meeting/",
+    "status": "finder",
+    "note": "Official fellowship meeting information; verify Chicago in-person availability"
+  },
+  {
+    "name": "Anorexics and Bulimics Anonymous",
+    "category": "Eating and body image",
+    "url": "https://www.aba12steps.org/",
+    "status": "finder",
+    "note": "Official fellowship meeting information; verify Chicago in-person availability"
+  },
+  {
+    "name": "Underearners Anonymous",
+    "category": "Behavioral and financial",
+    "url": "https://underearnersanonymous.org/meetings/",
+    "status": "finder",
+    "note": "Official fellowship meeting information; verify Chicago in-person availability"
+  },
+  {
+    "name": "Workaholics Anonymous",
+    "category": "Behavioral and financial",
+    "url": "https://workaholics-anonymous.org/meetings/",
+    "status": "finder",
+    "note": "Official fellowship meeting information; verify Chicago in-person availability"
+  },
+  {
+    "name": "Emotions Anonymous",
+    "category": "Emotional well-being",
+    "url": "https://emotionsanonymous.org/find-an-ea-meeting/",
+    "status": "finder",
+    "note": "Official fellowship meeting information; verify Chicago in-person availability"
+  },
+  {
+    "name": "Recovery International",
+    "category": "Emotional well-being",
+    "url": "https://www.recoveryinternational.org/find-a-meeting/",
+    "status": "finder",
+    "note": "Official fellowship meeting information; verify Chicago in-person availability"
+  },
+  {
+    "name": "Nicotine Anonymous",
+    "category": "Substance use",
+    "url": "https://nicotine-anonymous.org/",
+    "status": "finder",
+    "note": "Official fellowship meeting information; verify Chicago in-person availability"
   }
 ]
