@@ -19,7 +19,7 @@ URL="https://recoverystarts.com/meetings/aa/chicago/"
 UA="ChicagoRecoveryMeetings/0.5 (+https://github.com/TonyAChicago/chicago-recovery-meetings)"
 DEST=Path(__file__).resolve().parents[1]/"data"/"aa.json"
 VALID_TIME=re.compile(r"^(?:[01][0-9]|2[0-3]):[0-5][0-9]$")
-CHICAGO=re.compile(r",\\s*Chicago\\s*,\\s*IL(?:\\s+\\d{5})?\\s*,?\\s*USA?\\s*$",re.I)
+CHICAGO=re.compile(r",\s*Chicago\s*,\s*IL(?:\s+\d{5})?\s*,?\s*USA?\s*$",re.I)
 
 class Cards(HTMLParser):
     def __init__(self):
@@ -84,7 +84,7 @@ def normalize(card,checked):
     if not CHICAGO.search(address):return None
     street=address.split(", Chicago",1)[0].strip()
     # City-only or zipcode-only records cannot route someone to a room.
-    if not re.search(r"\\d",street):return None
+    if not re.search(r"\d",street):return None
     tags=[t.strip() for t in card["tags"] if t.strip()]
     folded={t.casefold() for t in tags}
     hybrid=any("in person + online" in t or "in-person and online" in t for t in folded)
@@ -95,7 +95,7 @@ def normalize(card,checked):
     mode="hybrid" if hybrid else "in-person"
     group_key=f"{link}|{day}|{start}".encode("utf-8")
     id_="aa-rs-"+hashlib.sha1(group_key).hexdigest()[:16]
-    postal=re.search(r"\\b(\\d{5})(?:-\\d{4})?\\b",address)
+    postal=re.search(r"\b(\d{5})(?:-\d{4})?\b",address)
     return {
       "id":id_, "program":"Alcoholics Anonymous", "title":title,"day":day,
       "start":start,"end":end,"venue":venue,"address":street,"city":"Chicago",
