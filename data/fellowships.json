@@ -3,8 +3,8 @@
     "name": "Alcoholics Anonymous",
     "category": "Substance use",
     "url": "https://www.chicagoaa.org/meetings/",
-    "status": "finder",
-    "note": "Automated access blocked (403); use official finder",
+    "status": "integrated",
+    "note": "Meeting records sourced through Recovery Starts' public Chicago AA index, attributed to original local publishers; confirm at source",
     "approach": "12step"
   },
   {
