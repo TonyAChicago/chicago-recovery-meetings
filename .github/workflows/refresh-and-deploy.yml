@@ -1,4 +1,4 @@
-name: Refresh recovery meetings and deploy site
+name: Refresh Chicago NA meetings
 
 on:
   workflow_dispatch:
@@ -7,26 +7,19 @@ on:
   push:
     branches: [main]
     paths:
-      - "index.html"
-      - "data/**"
-      - "scripts/**"
+      - "scripts/import_na.py"
       - ".github/workflows/refresh-and-deploy.yml"
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
-  group: recovery-pages
+  group: recovery-na-refresh
   cancel-in-progress: false
 
 jobs:
-  refresh-and-deploy:
+  refresh-meetings:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -43,22 +36,24 @@ jobs:
           if python3 scripts/import_na.py; then
             echo "import_ok=true" >> "$GITHUB_OUTPUT"
           else
-            echo "::warning::NA import failed; keeping the last committed NA data."
+            echo "::warning::NA import failed; preserving existing NA data."
             echo "import_ok=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Validate published JSON
+      - name: Validate meeting files
+        shell: bash
         run: |
           python3 - <<'PY'
           import json
           from pathlib import Path
-          for path in (Path("data/meetings.json"), Path("data/na.json")):
+          for name in ("meetings", "na"):
+              path = Path("data") / (name + ".json")
               rows = json.loads(path.read_text(encoding="utf-8"))
-              assert isinstance(rows, list), f"{path} must contain a JSON list"
+              assert isinstance(rows, list), f"{path} must contain an array"
               print(f"{path}: {len(rows)} records")
           PY
 
-      - name: Commit refreshed NA data if changed
+      - name: Commit changed NA data
         if: steps.import.outputs.import_ok == 'true'
         shell: bash
         run: |
@@ -66,27 +61,13 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/na.json
-            git commit -m "Refresh Chicagoland NA meeting data"
+            git commit -m "Refresh Chicago NA meeting listings"
             git push
           else
-            echo "NA meeting data unchanged."
+            echo "Meeting records unchanged."
           fi
 
-      - name: Stage public site
-        run: |
-          mkdir -p _site/data
-          cp index.html _site/index.html
-          cp data/meetings.json data/na.json _site/data/
-          touch _site/.nojekyll
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload site
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: _site
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+# GitHub Pages is currently deployed from the main branch using GitHub's
+# built-in "pages build and deployment" workflow. Do not deploy a second
+# Pages artifact here: that duplicate deployment failed even when the
+# normal branch-based Pages deployment succeeded.
