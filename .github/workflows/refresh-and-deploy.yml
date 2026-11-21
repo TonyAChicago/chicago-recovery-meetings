@@ -1,0 +1,92 @@
+name: Refresh recovery meetings and deploy site
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 10 * * *"
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "data/**"
+      - "scripts/**"
+      - ".github/workflows/refresh-and-deploy.yml"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: recovery-pages
+  cancel-in-progress: false
+
+jobs:
+  refresh-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh Chicagoland NA data
+        id: import
+        shell: bash
+        run: |
+          if python3 scripts/import_na.py; then
+            echo "import_ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::NA import failed; keeping the last committed NA data."
+            echo "import_ok=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate published JSON
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          for path in (Path("data/meetings.json"), Path("data/na.json")):
+              rows = json.loads(path.read_text(encoding="utf-8"))
+              assert isinstance(rows, list), f"{path} must contain a JSON list"
+              print(f"{path}: {len(rows)} records")
+          PY
+
+      - name: Commit refreshed NA data if changed
+        if: steps.import.outputs.import_ok == 'true'
+        shell: bash
+        run: |
+          if ! git diff --quiet -- data/na.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/na.json
+            git commit -m "Refresh Chicagoland NA meeting data"
+            git push
+          else
+            echo "NA meeting data unchanged."
+          fi
+
+      - name: Stage public site
+        run: |
+          mkdir -p _site/data
+          cp index.html _site/index.html
+          cp data/meetings.json data/na.json _site/data/
+          touch _site/.nojekyll
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
