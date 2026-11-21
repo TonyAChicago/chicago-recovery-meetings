@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {
     "ca": ("https://www.illinoisareaca.org/locations", "Cocaine Anonymous", "Illinois Area of Cocaine Anonymous", ROOT / "data" / "ca.json", 2),
     "rd": ("https://recoverydharmachicago.org/meetings/?tsml-day=any", "Recovery Dharma", "Recovery Dharma Chicago", ROOT / "data" / "rd_live.json", 5),
-    "s": ("https://smeetingschicago.com/meetings/?tsml-region=chicago", "S fellowships", "S Meetings Chicago", ROOT / "data" / "s_fellowships.json", 2),
+    "s": ("https://smeetingschicago.com/meetings/?tsml-region=chicago&tsml-day=any", "S fellowships", "S Meetings Chicago", ROOT / "data" / "s_fellowships.json", 2),
 }
 DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
