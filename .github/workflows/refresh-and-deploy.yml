@@ -1,4 +1,4 @@
-name: Refresh Chicago NA meetings
+name: Refresh Chicago recovery meetings
 
 on:
   workflow_dispatch:
@@ -58,7 +58,7 @@ jobs:
           python3 - <<'PY'
           import json
           from pathlib import Path
-          for name in ("meetings", "na", "ca", "rd_live"):
+          for name in ("meetings", "na", "ca", "rd_live", "s_fellowships"):
               path = Path("data") / (name + ".json")
               rows = json.loads(path.read_text(encoding="utf-8"))
               assert isinstance(rows, list), f"{path} must contain an array"
@@ -68,7 +68,7 @@ jobs:
       - name: Commit refreshed meeting data
         shell: bash
         run: |
-          if ! git diff --quiet -- data/na.json data/ca.json data/rd_live.json; then
+          if ! git diff --quiet -- data/na.json data/ca.json data/rd_live.json data/s_fellowships.json; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/na.json data/ca.json data/rd_live.json
