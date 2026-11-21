@@ -149,7 +149,7 @@ def main():
         for url in candidates:
             try:
                 req = Request(url, headers={"User-Agent": "ChicagoRecoveryMeetings/0.3 (noncommercial public-meeting index)", "Accept": "application/json"})
-                with urlopen(req, timeout=35) as response:
+                with urlopen(req, timeout=12) as response:
                     payload = json.load(response)
                 records = import_rows(payload, checked, args.min_count)
                 break
