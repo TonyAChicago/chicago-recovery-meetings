@@ -1,0 +1,24 @@
+[
+  {
+    "id": "lifering-official-1022-wed-1900",
+    "program": "LifeRing Secular Recovery",
+    "title": "Kindred Hospital LifeRing Meeting",
+    "day": 3,
+    "start": "19:00",
+    "end": "20:30",
+    "venue": "Kindred Hospital Chicago North",
+    "address": "2544 W Montrose Ave",
+    "city": "Chicago",
+    "state": "IL",
+    "postal_code": "60618",
+    "mode": "in-person",
+    "is_open": true,
+    "wheelchair_access": null,
+    "source_url": "https://meetings.lifering.org/meetings/1022/",
+    "source_name": "LifeRing Secular Recovery (official meeting finder)",
+    "last_checked": "2026-11-21",
+    "source_updated": "",
+    "verification": "source-listed; not independently verified",
+    "notes": "Check in at the front desk for the sixth-floor meeting room. Verify directly before attending."
+  }
+]
