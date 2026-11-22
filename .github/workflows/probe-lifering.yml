@@ -19,6 +19,9 @@ jobs:
           with urlopen(req,timeout=20) as r:s=r.read(1000000).decode("utf-8","replace")
           text=html.unescape(s)
           print("HTML_BYTES",len(s))
+          fields=re.findall(r'data-utc="([^"]+)"[^>]*data-format="([^"]+)"',text,re.I)
+          print("UTC_FIELDS",repr(fields[:20]))
+          print("UTC_UNIQUE",repr(list(dict.fromkeys(t for t,f in fields))[:20]))
           for term in ["FREQ","BYDAY","America/Chicago","19:00","20:30","Wednesday","Thursday","Kindred Hospital","Montrose","DTSTART","calendar","rrule"]:
             spots=[m.start() for m in re.finditer(re.escape(term),text,re.I)]
             snippets=[]
