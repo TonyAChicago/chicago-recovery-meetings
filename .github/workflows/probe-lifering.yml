@@ -1,0 +1,31 @@
+name: Inspect official LifeRing calendar fields
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/probe-lifering.yml"]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect meeting HTML schedule markup
+        run: |
+          python3 - <<'PY'
+          import re,html
+          from urllib.request import Request,urlopen
+          u="https://meetings.lifering.org/meetings/1022/"
+          req=Request(u,headers={"User-Agent":"ChicagoRecoveryMeetings/0.5 (+https://github.com/TonyAChicago/chicago-recovery-meetings)"})
+          with urlopen(req,timeout=20) as r:s=r.read(1000000).decode("utf-8","replace")
+          text=html.unescape(s)
+          print("HTML_BYTES",len(s))
+          for term in ["FREQ","BYDAY","America/Chicago","19:00","20:30","Wednesday","Thursday","Kindred Hospital","Montrose","DTSTART","calendar","rrule"]:
+            spots=[m.start() for m in re.finditer(re.escape(term),text,re.I)]
+            snippets=[]
+            for i in spots[:3]:
+              fragment=text[max(0,i-85):i+130]
+              fragment=re.sub(r"[\w.+-]+@[\w.-]+\.[a-z]{2,}","[redacted]",fragment,flags=re.I)
+              fragment=re.sub(r"[\r\n\t]"," ",fragment)
+              snippets.append(fragment)
+            print("MARKER",term,"COUNT",len(spots),"EXAMPLES",repr(snippets))
+          PY
