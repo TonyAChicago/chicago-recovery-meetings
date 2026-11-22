@@ -6,13 +6,13 @@ Nearby Evanston meetings and Chicago-labeled online-only meetings are excluded.
 Failure leaves the previous file intact; no attendee/convenor contacts are copied.
 """
 import datetime as dt
-from html import unescape
 from html.parser import HTMLParser
 import json
 import os
 from pathlib import Path
 import re
 import tempfile
+from zoneinfo import ZoneInfo
 from urllib.request import Request, urlopen
 import urllib.robotparser
 
@@ -20,7 +20,6 @@ BASE = "https://meetings.lifering.org"
 URL = BASE + "/meetings/1022/"
 DEST = Path(__file__).resolve().parents[1] / "data" / "lifering.json"
 UA = "ChicagoRecoveryMeetings/0.5 (+https://github.com/TonyAChicago/chicago-recovery-meetings)"
-DAY_CODES = {"SU": 0, "MO": 1, "TU": 2, "WE": 3, "TH": 4, "FR": 5, "SA": 6}
 
 class TextOnly(HTMLParser):
     def __init__(self):
@@ -46,25 +45,27 @@ def validate_and_parse(page):
         raise ValueError("Physical address missing; retaining previous data")
     if not re.search(r"Chicago,\s*IL,?\s*60618", text, re.I):
         raise ValueError("Source city or ZIP differs; retaining previous data")
-    # The source's calendar export is expressed in America/Chicago time,
-    # unlike visitor-timezone "Next meeting" text, which may display a different day.
-    combined=unescape(page) + " " + text
-    cal=re.search(
-        r"20\d{2}-\d{2}-\d{2}\s+(\d{1,2}:\d{2})\s+"
-        r"20\d{2}-\d{2}-\d{2}\s+(\d{1,2}:\d{2})\s+America/Chicago",
-        combined, re.I)
-    weekly=re.search(r"FREQ=WEEKLY;\s*BYDAY=(SU|MO|TU|WE|TH|FR|SA)\b", combined, re.I)
-    if not (cal and weekly):
-        raise ValueError("Local-time calendar schedule unavailable; retaining previous data")
-    hour,minute=map(int,cal.group(1).split(":"))
-    finish=cal.group(2)
-    if hour>23 or minute>59:
-        raise ValueError("Invalid start time")
-    day=DAY_CODES[weekly.group(1).upper()]
-    if day!=3 or (hour,minute)!=(19,0):
-        raise ValueError(f"Meeting schedule changed to weekday {day} {hour:02d}:{minute:02d}; review before publishing")
-    if finish!="20:30":
-        raise ValueError("Meeting end time changed; review before publishing")
+    # Source publishes UTC meeting event timestamps as tz-convert attributes.
+    # Convert to America/Chicago instead of trusting browser-timezone labels.
+    fields = re.findall(
+        r'data-utc="([^"]+)"\s+data-format="(date|time|weekday)"',
+        page, re.I)
+    stamps = list(dict.fromkeys(t for t,fmt in fields))
+    if len(stamps)!=2:
+        raise ValueError("Expected one UTC event start and end timestamp")
+    start_utc,end_utc=[dt.datetime.fromisoformat(t.replace("Z","+00:00")) for t in stamps]
+    if start_utc.tzinfo is None or end_utc.tzinfo is None:
+        raise ValueError("Event timestamps missing UTC timezone")
+    local=ZoneInfo("America/Chicago")
+    start_local=start_utc.astimezone(local)
+    end_local=end_utc.astimezone(local)
+    day=(start_local.weekday()+1)%7
+    hour,minute=start_local.hour,start_local.minute
+    finish=end_local.strftime("%H:%M")
+    if end_utc-start_utc!=dt.timedelta(minutes=90):
+        raise ValueError("Meeting duration changed; review before updating")
+    if day!=3 or (hour,minute)!=(19,0) or finish!="20:30":
+        raise ValueError("Meeting day or time changed; manual review needed")
     return {
         "id": "lifering-official-1022-wed-1900",
         "program": "LifeRing Secular Recovery",
