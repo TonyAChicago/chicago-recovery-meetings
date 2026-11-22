@@ -11,6 +11,7 @@ on:
       - "scripts/import_aa.py"
       - "scripts/import_smart.py"
       - "scripts/import_aca.py"
+      - "scripts/import_lifering.py"
       - "scripts/import_other.py"
       - ".github/workflows/refresh-and-deploy.yml"
 
@@ -84,13 +85,22 @@ jobs:
             echo "::warning::ACA source incomplete; keeping previously published data."
           fi
 
+      - name: Refresh LifeRing's official Chicago in-person listing
+        shell: bash
+        run: |
+          if python3 scripts/import_lifering.py; then
+            echo "LifeRing record checked and updated"
+          else
+            echo "::warning::LifeRing source verification failed; preserving prior listing for review."
+          fi
+
       - name: Validate meeting files
         shell: bash
         run: |
           python3 - <<'PY'
           import json
           from pathlib import Path
-          for name in ("meetings", "na", "ca", "rd_live", "s_fellowships", "aa", "smart", "aca"):
+          for name in ("meetings", "na", "ca", "rd_live", "s_fellowships", "aa", "smart", "aca", "lifering"):
               path = Path("data") / (name + ".json")
               rows = json.loads(path.read_text(encoding="utf-8"))
               assert isinstance(rows, list), f"{path} must contain an array"
@@ -100,10 +110,10 @@ jobs:
       - name: Commit refreshed meeting data
         shell: bash
         run: |
-          if ! git diff --quiet -- data/na.json data/ca.json data/rd_live.json data/s_fellowships.json data/aa.json data/smart.json data/aca.json; then
+          if ! git diff --quiet -- data/na.json data/ca.json data/rd_live.json data/s_fellowships.json data/aa.json data/smart.json data/aca.json data/lifering.json; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/na.json data/ca.json data/rd_live.json data/s_fellowships.json data/aa.json data/smart.json data/aca.json
+            git add data/na.json data/ca.json data/rd_live.json data/s_fellowships.json data/aa.json data/smart.json data/aca.json data/lifering.json
             git commit -m "Refresh Chicago recovery meeting listings"
             pushed=false
             for attempt in 1 2 3 4; do
